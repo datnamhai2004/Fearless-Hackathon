@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat bot</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .chat-box {
+            background-color: #34495e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        .chat-box h1 {
+            margin-bottom: 30px;
+            text-align: center;
+            color: #e74c3c;
+        }
+        .chat-box form {
+            margin-bottom: 20px;
+        }
+        .chat-box .response {
+            background-color: #2ecc71;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .chat-box .audio-player {
+            margin-top: 20px;
+        }
+        .image-box img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        .record-button {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .record-button button {
+            width: 150px;
+            background-color: #e74c3c;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .record-button button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chat-box">
+                    <h1>Chat</h1>
+                    <form id="chat-form" method="post" action="/chat">
+                        <div class="form-group">
+                            <label for="user_input">Nhập tin nhắn:</label>
+                            <textarea id="user_input" name="user_input" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Gửi</button>
+                    </form>
+
+                    <div class="record-button">
+                        <button id="record-btn" class="btn">Ghi âm</button>
+                    </div>
+                    <p id="status" class="text-center"></p>
+
+                    {% if user_input %}
+                        <div class="response">
+                            <h4>Phản hồi từ Bot:</h4>
+                            <p>{{ response }}</p>
+                        </div>
+                        {% if audio_file %}
+                            <div class="audio-player">
+                                <audio id="audio" controls autoplay>
+                                    <source src="/audio/{{ audio_file }}" type="audio/mp3">
+                                    Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                                </audio>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="image-box">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', function(event) {
+            const user_input = document.getElementById('user_input').value;
+            if (!user_input) {
+                alert("Vui lòng nhập tin nhắn!");
+                event.preventDefault();
+            }
+        });
+
+        // Xóa file âm thanh cũ khi người dùng gửi tin nhắn mới
+        document.getElementById('chat-form').addEventListener('submit', function(event) {
+            const audio = document.getElementById('audio');
+            if (audio) {
+                audio.src = "";
+            }
+        });
+
+        // Ghi âm giọng nói và chuyển đổi thành văn bản
+        const recordBtn = document.getElementById('record-btn');
+        const status = document.getElementById('status');
+        const userInput = document.getElementById('user_input');
+
+        let recognition;
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+        } else if ('SpeechRecognition' in window) {
+            recognition = new SpeechRecognition();
+        } else {
+            alert('Your browser does not support Speech Recognition');
+        }
+
+        if (recognition) {
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'vi-VN';
+
+            recognition.onstart = function() {
+                status.textContent = 'Đang ghi âm...';
+            };
+
+            recognition.onresult = function(event) {
+                status.textContent = 'Đã ghi âm xong.';
+                userInput.value = event.results[0][0].transcript;
+                
+                // Automatically submit the form after recording
+                document.getElementById('chat-form').submit();
+            };
+
+            recognition.onerror = function(event) {
+                status.textContent = 'Có lỗi xảy ra trong quá trình ghi âm: ' + event.error;
+            };
+
+            recognition.onend = function() {
+                status.textContent = '';
+            };
+
+            recordBtn.addEventListener('click', function() {
+                recognition.start();
+            });
+        }
+    </script>
+</body>
+</html>
