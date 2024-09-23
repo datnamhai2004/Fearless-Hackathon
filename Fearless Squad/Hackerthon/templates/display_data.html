@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dữ liệu Cảm biến</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .container {
+            width: 45%;
+            border: 1px solid #000;
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        // Fetch dữ liệu cảm biến lực
+        async function fetchForceSensorData() {
+            const response = await fetch('/sensor-data');
+            const result = await response.json();
+            const data = result.sensor_data;
+            const tableBody = document.getElementById('sensor-data-body');
+            tableBody.innerHTML = ''; // Xóa dữ liệu cũ
+
+            data.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.sensor1}</td>
+                    <td>${entry.sensor2}</td>
+                    <td>${entry.sensor3}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Fetch dữ liệu cảm biến ADXL345
+        async function fetchADXL345Data() {
+            const response = await fetch('/adxl345-data');
+            const result = await response.json();
+            console.log(result); // Thêm dòng này để kiểm tra dữ liệu
+            const data = result.adxl345_data;
+            const tableBody = document.getElementById('adxl345-data-body');
+            tableBody.innerHTML = ''; // Xóa dữ liệu cũ
+        
+            data.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.adxl_x}</td>
+                    <td>${entry.adxl_y}</td>
+                    <td>${entry.adxl_z}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+
+        // Dọn sạch dữ liệu cảm biến lực
+        async function cleanForceSensorData() {
+            const response = await fetch('/clean-sensor-data', { method: 'POST' });
+            if (response.ok) {
+                alert('Dữ liệu cảm biến lực đã được dọn sạch.');
+                fetchForceSensorData(); // Cập nhật lại dữ liệu sau khi dọn sạch
+            }
+        }
+
+        // Dọn sạch dữ liệu ADXL345
+        async function cleanADXL345Data() {
+            const response = await fetch('/clean-adxl345-data', { method: 'POST' });
+            if (response.ok) {
+                alert('Dữ liệu cảm biến ADXL345 đã được dọn sạch.');
+                fetchADXL345Data(); // Cập nhật lại dữ liệu sau khi dọn sạch
+            }
+        }
+
+        // Tự động tải lại dữ liệu sau mỗi 2 giây cho cả 2 loại dữ liệu
+        setInterval(() => {
+            fetchForceSensorData();
+            fetchADXL345Data();
+        }, 2000);
+    </script>
+</head>
+<body>
+
+    <!-- Cảm biến lực bên trái -->
+    <div class="container">
+        <h2>Dữ liệu Cảm biến Lực</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sensor 1</th>
+                    <th>Sensor 2</th>
+                    <th>Sensor 3</th>
+                </tr>
+            </thead>
+            <tbody id="sensor-data-body">
+                <!-- Dữ liệu sẽ được thêm vào đây -->
+            </tbody>
+        </table>
+        <button onclick="cleanForceSensorData()">Clean Dữ liệu Cảm biến Lực</button>
+    </div>
+
+    <!-- Cảm biến ADXL345 bên phải -->
+    <div class="container">
+        <h2>Dữ liệu Cảm biến ADXL345</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ADXL X</th>
+                    <th>ADXL Y</th>
+                    <th>ADXL Z</th>
+                </tr>
+            </thead>
+            <tbody id="adxl345-data-body">
+                <!-- Dữ liệu ADXL345 sẽ được thêm vào đây -->
+            </tbody>
+        </table>
+        <button onclick="cleanADXL345Data()">Clean Dữ liệu ADXL345</button>
+    </div>
+
+</body>
+</html>
