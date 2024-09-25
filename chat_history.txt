@@ -37,3 +37,6 @@
 22-09-2024 19:33:53 - User: hi
 22-09-2024 19:33:53 - Bot: Xin chào! Tôi là một trợ lý AI được thiết kế để hỗ trợ và đáp ứng câu hỏi của bạn. Tôi có thể giúp đỡ bạn với nhiều công việc khác nhau như tìm kiếm thông tin trợ giúp, đưa ra thống kê, lên lịch hẹn, và nhiều hơn nữa. Bạn muốn tôi giúp gì cho bạn ngày hôm nay?
 
+25-09-2024 09:06:16 - User: xin ca
+25-09-2024 09:06:50 - User: xin ca
+25-09-2024 09:07:19 - User: xin

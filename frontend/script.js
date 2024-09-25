@@ -8,56 +8,16 @@ document.getElementById('user_input').addEventListener('keypress', function(e) {
     }
 });
 
-document.getElementById('send-image-btn').addEventListener('click', function() {
-    document.getElementById('image-input').click();
-});
-
 document.getElementById('toggle-voice-btn').addEventListener('click', function() {
     toggleRecording();
 });
 
-document.getElementById('image-input').addEventListener('change', function(event) {
-    sendImage(event.target.files[0]);
-});
+
 
 let mediaRecorder;
 let audioChunks = [];
 let isRecording = false;
 
-// function sendMessage() {
-//     const messageInput = document.getElementById('user_input');
-//     const message = messageInput.value.trim();
-
-//     if (message !== '') {
-//         const chatBox = document.getElementById('chat-box');
-//         const messageElement = document.createElement('div');
-//         messageElement.className = 'chat-message user';
-//         messageElement.textContent = message;
-        
-//         chatBox.appendChild(messageElement);
-//         chatBox.scrollTop = chatBox.scrollHeight;
-        
-//         messageInput.value = '';
-//         messageInput.focus();
-//     }
-// }
-
-function sendImage(imageFile) {
-    if (imageFile) {
-        const chatBox = document.getElementById('chat-box');
-        const imageElement = document.createElement('img');
-        imageElement.className = 'chat-message user';
-        imageElement.src = URL.createObjectURL(imageFile);
-        imageElement.style.maxWidth = '30%';
-        imageElement.style.maxHeight = '30%';
-        imageElement.style.borderRadius = '8px';
-        imageElement.style.float = 'right';
-        imageElement.style.marginBottom = '10px';
-
-        chatBox.appendChild(imageElement);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-}
 
 function toggleRecording() {
     if (isRecording) {
@@ -92,28 +52,10 @@ function stopRecording() {
     if (mediaRecorder) {
         mediaRecorder.stop();
         isRecording = false;
-        document.getElementById('toggle-voice-btn').textContent = '🎤';
+        document.getElementById('toggle-voice-btn').textContent = 'url';
     }
 }
 
-// function sendVoice(audioBlob) {
-//     if (audioBlob) {
-//         const chatBox = document.getElementById('chat-box');
-//         const audioElement = document.createElement('audio');
-//         audioElement.className = 'chat-message user';
-//         audioElement.src = URL.createObjectURL(audioBlob);
-//         audioElement.controls = true;
-//         audioElement.style.display = 'block';
-//         audioElement.style.display = 'block';
-//         audioElement.style.width = '300px';
-//         audioElement.style.marginBottom = '10px';
-//         audioElement.style.borderRadius = '10px';
-
-
-//         chatBox.appendChild(audioElement);
-//         chatBox.scrollTop = chatBox.scrollHeight;
-//     }
-// }
 async function sendVoiceMessage(audioBlob) {
     const formData = new FormData();
     formData.append('voice', audioBlob);
@@ -186,10 +128,11 @@ async function sendMessage() {
     if (message !== '') {
         const chatBox = document.getElementById('chat-box');
 
-        // Display user message
+        // Display user message (Ensuring each message is on a new line)
         const userMessageElement = document.createElement('div');
         userMessageElement.className = 'chat-message user';
         userMessageElement.textContent = message;
+        userMessageElement.style.display = 'block'; // Ensure each message is block-level (new line)
         chatBox.appendChild(userMessageElement);
         chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -208,6 +151,7 @@ async function sendMessage() {
         const botMessageElement = document.createElement('div');
         botMessageElement.className = 'chat-message bot';
         botMessageElement.textContent = data.response;
+        botMessageElement.style.display = 'block'; // Ensure each bot message is block-level (new line)
         chatBox.appendChild(botMessageElement);
         chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -228,6 +172,7 @@ async function sendMessage() {
         messageInput.value = '';
     }
 }
+
 
 
 
