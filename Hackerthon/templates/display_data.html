@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dữ liệu ICM-20948</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 90%;  
+            border: 1px solid #000;
+            padding: 10px;
+            margin: auto; 
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        // Fetch dữ liệu cảm biến
+        async function fetchSensorData() {
+            try {
+                const response = await fetch('/icm20948-data');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const result = await response.json();
+                const data = result.icm20948_data; // Dữ liệu trả về
+
+                const tableBody = document.getElementById('sensor-data-body');
+                tableBody.innerHTML = ''; // Xóa dữ liệu cũ
+
+                data.forEach(entry => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${entry.acc_x}</td>
+                        <td>${entry.acc_y}</td>
+                        <td>${entry.acc_z}</td>
+                        <td>${entry.gyro_x}</td>
+                        <td>${entry.gyro_y}</td>
+                        <td>${entry.gyro_z}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        }
+
+        // Dọn sạch dữ liệu cảm biến
+        async function cleanSensorData() {
+            try {
+                const response = await fetch('/clean-sensor-data', { method: 'POST' });
+                if (response.ok) {
+                    alert('Dữ liệu cảm biến đã được dọn sạch.');
+                    fetchSensorData(); // Cập nhật lại dữ liệu sau khi dọn sạch
+                } else {
+                    throw new Error('Failed to clean sensor data');
+                }
+            } catch (error) {
+                console.error('Clean error:', error);
+            }
+        }
+
+        // Tự động tải lại dữ liệu sau mỗi 2 giây
+        setInterval(() => {
+            fetchSensorData();
+        }, 2000); // 2000ms = 2 giây
+    </script>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Dữ liệu ICM-20948</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Gia tốc X</th>
+                    <th>Gia tốc Y</th>
+                    <th>Gia tốc Z</th>
+                    <th>Con quay hồi chuyển X</th>
+                    <th>Con quay hồi chuyển Y</th>
+                    <th>Con quay hồi chuyển Z</th>
+                </tr>
+            </thead>
+            <tbody id="sensor-data-body">
+                <!-- Dữ liệu sẽ được thêm vào đây -->
+            </tbody>
+        </table>
+        <button onclick="cleanSensorData()">Dọn sạch Dữ liệu ICM-20948</button>
+    </div>
+
+</body>
+</html>
