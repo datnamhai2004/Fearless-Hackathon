@@ -46,12 +46,12 @@ body {
 
 
 .user {
-    max-width: 30rem;
-    width: auto;
+    max-width: 100%;
+    width: 100%;
     float: right;
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #e2e2e2;
+    /* background-color: #e2e2e2;                                                                                        */
     word-wrap: break-word;
     border-radius: 10px;
     display: block;
