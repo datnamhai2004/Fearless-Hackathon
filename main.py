@@ -12,23 +12,28 @@ import speech_recognition as sr
 from pydub import AudioSegment
 from fastapi.staticfiles import StaticFiles
 
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
 load_dotenv()
 app = FastAPI()
 AUDIO_FOLDER = "frontend/audio" 
 os.makedirs(AUDIO_FOLDER, exist_ok=True)
 openai.api_key = os.getenv('OPENAI_API_KEY')
+AUDIO_FOLDER = "frontend/audio" 
 CHAT_HISTORY_FILE = "chat_history.txt"
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 templates = Jinja2Templates(directory="frontend")
 app.mount("/static", StaticFiles(directory="frontend"), name="static")
+Name = ' bien '
+Age = 20
+can = '56 kg'
+cao = '1m7'
 
 def generate_response(user_input):
 
     completion = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-4o",
         messages=[
-            {"role": "system", "content": "Bạn hãy đọc kỹ yêu cầu là bạn là ai và công việc của bạn là gì..."},
+            {"role": "system", "content": f"Bạn là một trợ lý về sức khỏe của tôi bạn hãy đọc kĩ và ghi nhớ thông tin của tôi. Tôi là {Name} tôi {Age} tuổi tôi cao {cao}số cân của tôi là {can}"},
             {"role": "user", "content": user_input}
         ]
     )
@@ -46,9 +51,6 @@ def save_chat_history(user_input: str, response: str):
         timestamp = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         f.write(f"{timestamp} - User: {user_input}\n")
         f.write(f"{timestamp} - Bot: {response}\n\n")
-
-
-
 
 def generate_voice_response(response: str):
     tts = gTTS(response, lang='en')

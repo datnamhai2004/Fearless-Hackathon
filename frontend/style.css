@@ -1,79 +1,135 @@
+/* Đặt font chung cho trang web, chọn font dễ đọc và mềm mại */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: #f1f8e9; /* Màu nền nhạt, tạo cảm giác thiên nhiên */
+    color: #004d40; /* Màu chữ chính nhẹ nhàng, dễ đọc */
 }
 
-
-.chat-container{
+/* Phong cách cho khung chat tổng */
+.chat-container {
     max-width: 100%;
     width: 100%;
     max-height: 100%;
     height: 100%;
-    background-color: #ffffff   ;
+    background-color: #ffffff; /* Màu nền trắng sạch */
     margin: 0;
     align-items: center;
     justify-content: center;
     display: flex;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px; /* Bo góc mềm mại */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho chiều sâu */
 }
-.Chat{
+
+/* Khung chat với bo góc mềm mại, màu nền tươi mới */
+.Chat {
     max-width: 100%;
-    margin-top: 3REM;
+    margin-top: 3rem;
     width: 90%;
     height: 100%;
     max-height: 90%;
-    /* border: 1px solid grey; */
-    background-color: rgb(243, 243, 243);
-    border-radius: 2rem;
+    background-color: #e8f5e9; /* Màu xanh nhạt gợi thiên nhiên */
+    border-radius: 20px; /* Bo góc mềm mại */
     padding: 0 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Tạo độ nổi nhẹ */
 }
 
-.chat-box{
-    border-radius: 2rem;
-    /* background-color: #cef1f7; */
+/* Khung chứa tin nhắn */
+.chat-box {
+    border-radius: 15px;
     width: 100%;
     max-height: 90%;
     height: 100%;
     overflow: hidden;
-    padding: 1% 2% 1% 1% ;
-    overflow-y: auto ;
-    display: block;   
+    padding: 1% 2% 1% 1%;
+    overflow-y: auto;
+    display: block;
+    background-color: #ffffff; /* Màu nền nhẹ nhàng */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); /* Tạo chiều sâu cho khung chat */
+    animation: fadeIn 1s ease-out; /* Hiệu ứng mờ dần vào */
 }
 
+/* Hiệu ứng xuất hiện mờ dần */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
+/* Tin nhắn người dùng */
 .user {
-    max-width: 30rem;
-    width: auto;
+    max-width: 100%;
+    width: 100%;
     float: right;
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #e2e2e2;
+    background-color: #c8e6c9; /* Màu xanh lá cây nhẹ nhàng */
+    color: #2e7d32; /* Màu chữ đậm hơn để dễ đọc */
     word-wrap: break-word;
     border-radius: 10px;
     display: block;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.bot{
+.user:hover {
+    background-color: #aed581; /* Màu sáng hơn khi hover */
+    transform: scale(1.02); /* Phóng to nhẹ khi hover */
+}
+
+/* Tin nhắn của bot */
+.bot {
     max-width: 30rem;
     width: auto;
     float: left;
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #e2e2e2;
+    background-color: #e0f2f1; /* Màu xanh biển nhạt tạo cảm giác thư giãn */
+    color: #004d40; /* Màu chữ đậm cho dễ đọc */
     word-wrap: break-word;
     border-radius: 10px;
     display: block;
-}
-#send-btn, #toggle-voice-btn{
-    box-sizing: border-box;
-    border-radius: 1px solid white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+.bot:hover {
+    background-color: #b2dfdb; /* Màu sáng hơn khi hover */
+    transform: scale(1.02); /* Phóng to nhẹ khi hover */
+}
 
+/* Nút và thanh nhập liệu chat */
+#send-btn, #toggle-voice-btn {
+    background-color: #66bb6a; /* Màu xanh lá cây */
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng nút nổi */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#send-btn:hover, #toggle-voice-btn:hover {
+    transform: scale(1.1); /* Phóng to nhẹ khi hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Tăng độ nổi */
+}
+
+#send-btn img, #toggle-voice-btn img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Vùng nhập liệu */
 .chat-input {
     display: flex;
     max-width: 100%;
@@ -83,55 +139,73 @@ body {
     margin: 0;
     align-items: center;
     justify-content: center;
-    display: flex;
-    /* padding: 10px; */
-    /* border-top: 1px solid rgb(128, 128, 128); */
+    background-color: #ffffff; /* Nền trắng sạch */
+    padding: 10px;
+    border-top: 1px solid #cfd8dc; /* Viền nhẹ phía trên */
 }
 
 .chat-input input[type="text"] {
     flex: 1;
     padding: 10px;
-    border: 1px solid #000000;
+    border: 1px solid #cfd8dc;
     border-radius: 20px;
     margin-right: 10px;
-    /* padding: 3px; */
+    background-color: #f1f8e9; /* Màu nền nhạt nhẹ nhàng */
+    color: #2e7d32; /* Màu chữ xanh lá */
+    transition: border-color 0.3s ease;
 }
 
-.chat-input button {
-    padding: 5px 7px;
-    margin: 0 4px;
-    border: none;
-    background-color: #ffffff;
-    color: #fff;
-    border-radius: 50%;
-    border: 1px solid rgb(221, 221, 221);
-    /* cursor: pointer; */
+.chat-input input[type="text"]:focus {
+    border-color: #66bb6a; /* Đổi màu viền khi focus */
 }
 
-.chat-message {
-    margin-bottom: 10px;
-    
+/* Thẻ audio của người dùng và bot, được xếp theo chiều dọc */
+.chat-audio {
+    margin-top: 10px;
+    width: 100%;
 }
 
-.chat-message.user {
-    text-align: right;
-    color: rgb(0, 0, 0); /* Màu cho tin nhắn của người dùng */
-    
+.chat-audio audio {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.chat-message.bot {
-    text-align: left;
-    color: rgb(56, 56, 56); /* Màu cho tin nhắn của bot */
-}
-*, *::before, *::after {
-    box-sizing: border-box;
+/* Căn chỉnh phần text và audio của bot */
+.bot-container {
+    display: block; /* Đảm bảo text và audio của bot hiển thị theo chiều dọc */
 }
 
-/* ============================================================================================== */
-.menu>li{
+.bot-container .bot-text {
+    background-color: #e0f2f1;
+    padding: 10px;
+    border-radius: 10px;
+    word-wrap: break-word;
+    max-width: 70%; /* Điều chỉnh kích thước phần văn bản */
+    margin-bottom: 5px; /* Khoảng cách giữa văn bản và audio */
+}
+
+/* Style cho menu */
+.menu > li {
     padding-left: 12px;
     border-radius: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
-.menu>li:hover{
-    background-color: rgb(241, 241, 241);
+
+.menu > li:hover {
+    background-color: #a5d6a7; /* Màu xanh nhạt khi hover */
+    transform: scale(1.05); /* Phóng to nhẹ */
+}
+
+/* Navbar */
+.navbar {
+    background-color: #388e3c; /* Màu xanh lá cây đậm cho tiêu đề menu */
+    color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho thanh điều hướng */
+}
+
+/* Navbar toggler hover */
+.navbar-toggler:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
 }

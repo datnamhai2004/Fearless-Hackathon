@@ -56,46 +56,101 @@ function stopRecording() {
     }
 }
 
-async function sendVoiceMessage(audioBlob) {
-    const formData = new FormData();
-    formData.append('voice', audioBlob);
+async function sendMessage() {
+    const messageInput = document.getElementById('user_input');
+    const message = messageInput.value.trim();
 
-    const response = await fetch('/chat-voice', {
-        method: 'POST',
-        body: formData
-    });
+    if (message !== '') {
+        const chatBox = document.getElementById('chat-box');
 
-    const data = await response.json();
-
-    const chatBox = document.getElementById('chat-box');
-
-    // Hiển thị âm thanh ghi âm từ người dùng
-    const userVoiceElement = document.createElement('audio');
-    userVoiceElement.src = URL.createObjectURL(audioBlob);
-    userVoiceElement.controls = true;
-    userVoiceElement.style.marginBottom = '10px';
-    chatBox.appendChild(userVoiceElement);
-    chatBox.scrollTop = chatBox.scrollHeight;
-   
-
-    // Hiển thị phản hồi văn bản từ bot
-    const botMessageElement = document.createElement('div');
-    botMessageElement.className = 'chat-message bot';
-    botMessageElement.textContent = data.response; // Hiển thị phản hồi
-    chatBox.appendChild(botMessageElement);
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    // Hiển thị âm thanh phản hồi từ bot (nếu có)
-    if (data.audio_url) {
-        const botVoiceElement = document.createElement('audio');
-        botVoiceElement.src = data.audio_url;
-        botVoiceElement.controls = true;
-        botVoiceElement.style.marginBottom = '10px';
-        chatBox.appendChild(botVoiceElement);
+        // Hiển thị tin nhắn của người dùng
+        const userMessageElement = document.createElement('div');
+        userMessageElement.className = 'chat-message user';
+        userMessageElement.textContent = message;
+        chatBox.appendChild(userMessageElement);
         chatBox.scrollTop = chatBox.scrollHeight;
-        botVoiceElement.play();
+
+        // Gửi tin nhắn tới server
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({'user_input': message})
+        });
+
+        const data = await response.json();
+
+        // Hiển thị phản hồi văn bản của bot
+        const botMessageElement = document.createElement('div');
+        botMessageElement.className = 'chat-message bot';
+        botMessageElement.textContent = data.response;
+        chatBox.appendChild(botMessageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Hiển thị phản hồi âm thanh từ bot (nếu có)
+        if (data.audio_url) {
+            const botVoiceElement = document.createElement('audio');
+            botVoiceElement.src = data.audio_url;
+            botVoiceElement.controls = true;
+            botVoiceElement.style.marginTop = '10px'; // Khoảng cách giữa văn bản và audio
+
+            // Thêm thẻ audio dưới phần văn bản của bot
+            const botAudioContainer = document.createElement('div');
+            botAudioContainer.className = 'chat-audio'; // Thêm class cho thẻ audio để quản lý bằng CSS
+            botAudioContainer.appendChild(botVoiceElement);
+            chatBox.appendChild(botAudioContainer);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Tự động phát âm thanh nếu cần
+            botVoiceElement.play();
+        }
+
+        // Xóa nội dung input sau khi gửi
+        messageInput.value = '';
     }
 }
+
+// async function sendVoiceMessage(audioBlob) {
+//     const formData = new FormData();
+//     formData.append('voice', audioBlob);
+
+//     const response = await fetch('/chat-voice', {
+//         method: 'POST',
+//         body: formData
+//     });
+
+//     const data = await response.json();
+
+//     const chatBox = document.getElementById('chat-box');
+
+//     // Hiển thị âm thanh ghi âm từ người dùng
+//     const userVoiceElement = document.createElement('audio');
+//     userVoiceElement.src = URL.createObjectURL(audioBlob);
+//     userVoiceElement.controls = true;
+//     userVoiceElement.style.marginBottom = '10px';
+//     chatBox.appendChild(userVoiceElement);
+//     chatBox.scrollTop = chatBox.scrollHeight;
+   
+
+//     // Hiển thị phản hồi văn bản từ bot
+//     const botMessageElement = document.createElement('div');
+//     botMessageElement.className = 'chat-message bot';
+//     botMessageElement.textContent = data.response; // Hiển thị phản hồi
+//     chatBox.appendChild(botMessageElement);
+//     chatBox.scrollTop = chatBox.scrollHeight;
+
+//     // Hiển thị âm thanh phản hồi từ bot (nếu có)
+//     if (data.audio_url) {
+//         const botVoiceElement = document.createElement('audio');
+//         botVoiceElement.src = data.audio_url;
+//         botVoiceElement.controls = true;
+//         botVoiceElement.style.marginBottom = '10px';
+//         chatBox.appendChild(botVoiceElement);
+//         chatBox.scrollTop = chatBox.scrollHeight;
+//         botVoiceElement.play();
+//     }
+// }
 
 
 
@@ -121,57 +176,57 @@ async function loadChatHistory() {
     });
 }
 
-async function sendMessage() {
-    const messageInput = document.getElementById('user_input');
-    const message = messageInput.value.trim();
+// async function sendMessage() {
+//     const messageInput = document.getElementById('user_input');
+//     const message = messageInput.value.trim();
 
-    if (message !== '') {
-        const chatBox = document.getElementById('chat-box');
+//     if (message !== '') {
+//         const chatBox = document.getElementById('chat-box');
 
-        // Display user message (Ensuring each message is on a new line)
-        const userMessageElement = document.createElement('div');
-        userMessageElement.className = 'chat-message user';
-        userMessageElement.textContent = message;
-        userMessageElement.style.display = 'block'; // Ensure each message is block-level (new line)
-        chatBox.appendChild(userMessageElement);
-        chatBox.scrollTop = chatBox.scrollHeight;
+//         // Display user message (Ensuring each message is on a new line)
+//         const userMessageElement = document.createElement('div');
+//         userMessageElement.className = 'chat-message user';
+//         userMessageElement.textContent = message;
+//         userMessageElement.style.display = 'block'; // Ensure each message is block-level (new line)
+//         chatBox.appendChild(userMessageElement);
+//         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Send the message to the server
-        const response = await fetch('/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({'user_input': message})
-        });
+//         // Send the message to the server
+//         const response = await fetch('/chat', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/x-www-form-urlencoded',
+//             },
+//             body: new URLSearchParams({'user_input': message})
+//         });
 
-        const data = await response.json();
+//         const data = await response.json();
 
-        // Display bot's text response
-        const botMessageElement = document.createElement('div');
-        botMessageElement.className = 'chat-message bot';
-        botMessageElement.textContent = data.response;
-        botMessageElement.style.display = 'block'; // Ensure each bot message is block-level (new line)
-        chatBox.appendChild(botMessageElement);
-        chatBox.scrollTop = chatBox.scrollHeight;
+//         // Display bot's text response
+//         const botMessageElement = document.createElement('div');
+//         botMessageElement.className = 'chat-message bot';
+//         botMessageElement.textContent = data.response;
+//         botMessageElement.style.display = 'block'; // Ensure each bot message is block-level (new line)
+//         chatBox.appendChild(botMessageElement);
+//         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Display bot's audio response if available
-        if (data.audio_url) {
-            const botVoiceElement = document.createElement('audio');
-            botVoiceElement.src = data.audio_url;
-            botVoiceElement.controls = true;
-            botVoiceElement.style.marginBottom = '10px';
-            chatBox.appendChild(botVoiceElement);
-            chatBox.scrollTop = chatBox.scrollHeight;
+//         // Display bot's audio response if available
+//         if (data.audio_url) {
+//             const botVoiceElement = document.createElement('audio');
+//             botVoiceElement.src = data.audio_url;
+//             botVoiceElement.controls = true;
+//             botVoiceElement.style.marginBottom = '10px';
+//             chatBox.appendChild(botVoiceElement);
+//             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Optional: play the audio automatically
-            botVoiceElement.play();
-        }
+//             // Optional: play the audio automatically
+//             botVoiceElement.play();
+//         }
 
-        // Clear the input
-        messageInput.value = '';
-    }
-}
+//         // Clear the input
+//         messageInput.value = '';
+//     }
+// }
 
 
 
